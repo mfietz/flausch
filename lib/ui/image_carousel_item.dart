@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ImageCarouselItem extends StatelessWidget {
   final String thumbnailUrl;
@@ -32,7 +33,15 @@ class ImageCarouselItem extends StatelessWidget {
         Padding(
           padding: EdgeInsets.all(8.0),
           child: Image.network(
-            imageUrl,
+            thumbnailUrl,
+            fit: BoxFit.contain,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(8.0),
+          child: FadeInImage.memoryNetwork(
+            placeholder: kTransparentImage,
+            image: imageUrl,
             fit: BoxFit.contain,
           ),
         ),

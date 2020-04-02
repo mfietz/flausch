@@ -64,15 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: SafeArea(
-        child: Container(
-          child: media.isEmpty
-              ? buildCircularProgressIndicator()
-              : buildCarousel(),
-        ),
+      body: Container(
+        child:
+            media.isEmpty ? buildCircularProgressIndicator() : buildCarousel(),
       ),
     );
   }
