@@ -252,7 +252,7 @@ final postHintValues = EnumValues({
 });
 
 class Preview {
-  List<Image> images;
+  List<RedditImage> images;
   bool enabled;
   RedditVideo redditVideoPreview;
 
@@ -263,7 +263,8 @@ class Preview {
   });
 
   factory Preview.fromJson(Map<String, dynamic> json) => Preview(
-        images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+        images: List<RedditImage>.from(
+            json["images"].map((x) => RedditImage.fromJson(x))),
         enabled: json["enabled"],
         redditVideoPreview: json["reddit_video_preview"] == null
             ? null
@@ -271,20 +272,20 @@ class Preview {
       );
 }
 
-class Image {
+class RedditImage {
   ResizedIcon source;
   List<ResizedIcon> resolutions;
   Variants variants;
   String id;
 
-  Image({
+  RedditImage({
     this.source,
     this.resolutions,
     this.variants,
     this.id,
   });
 
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
+  factory RedditImage.fromJson(Map<String, dynamic> json) => RedditImage(
         source: ResizedIcon.fromJson(json["source"]),
         resolutions: List<ResizedIcon>.from(
             json["resolutions"].map((x) => ResizedIcon.fromJson(x))),

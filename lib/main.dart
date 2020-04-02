@@ -1,4 +1,4 @@
-import 'package:flausch/screens/main_screen.dart';
+import 'package:flausch/ui/main_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flausch',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.deepOrange,
       ),
       home: HomeScreen(title: 'aww'),
     );
