@@ -69,30 +69,45 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SafeArea(
         child: Container(
-          child: CarouselSlider.builder(
-              viewportFraction: 1.0,
-              height: double.infinity,
-              itemCount: media.length,
-              itemBuilder: (context, index) {
-                var m = media[index];
-                switch (m.type) {
-                  case MediaType.Image:
-                    return ImageCarouselItem(
-                      thumbnailUrl: m.thumbnailUrl,
-                      imageUrl: m.mediaUrl,
-                    );
-                  case MediaType.Video:
-                    return VideoCarouselItem(
-                      thumbnailUrl: m.thumbnailUrl,
-                      videoUrl: m.mediaUrl,
-                    );
-                  default:
-                    return Placeholder();
-                }
-              }),
+          child: media.isEmpty
+              ? buildCircularProgressIndicator()
+              : buildCarousel(),
         ),
       ),
     );
+  }
+
+  Widget buildCircularProgressIndicator() {
+    return Container(
+      color: Colors.grey,
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget buildCarousel() {
+    return CarouselSlider.builder(
+        viewportFraction: 1.0,
+        height: double.infinity,
+        itemCount: media.length,
+        itemBuilder: (context, index) {
+          var m = media[index];
+          switch (m.type) {
+            case MediaType.Image:
+              return ImageCarouselItem(
+                thumbnailUrl: m.thumbnailUrl,
+                imageUrl: m.mediaUrl,
+              );
+            case MediaType.Video:
+              return VideoCarouselItem(
+                thumbnailUrl: m.thumbnailUrl,
+                videoUrl: m.mediaUrl,
+              );
+            default:
+              return Placeholder();
+          }
+        });
   }
 }
 

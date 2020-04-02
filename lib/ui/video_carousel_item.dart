@@ -26,6 +26,7 @@ class _VideoCarouselItemState extends State<VideoCarouselItem> {
       ..initialize().then((_) {
         setState(() {});
         _controller.play();
+        print(_controller.value.aspectRatio);
       });
   }
 
@@ -53,9 +54,12 @@ class _VideoCarouselItemState extends State<VideoCarouselItem> {
         Padding(
           padding: EdgeInsets.all(8.0),
           child: _controller.value.initialized
-              ? AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
+              ? Align(
+                  alignment: AlignmentDirectional.center,
+                  child: AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  ),
                 )
               : Container(),
         ),
