@@ -2,7 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flausch/services/reddit.dart';
 import 'package:flausch/services/reddit_response.dart';
 import 'package:flausch/ui/image_carousel_item.dart';
+import 'package:flausch/ui/video_carousel_item.dart';
 import 'package:flutter/material.dart';
+
+const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'gif', 'png'];
+const SUPPORTED_VIDEO_EXTENSIONS = ['jpg', 'gif', 'png'];
+const SUPPORTED_EXTENSIONS = SUPPORTED_IMAGE_EXTENSIONS;
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key, this.title}) : super(key: key);
@@ -14,22 +19,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<ChildData> data = [];
+  List<Media> media = [];
 
   @override
   void initState() {
     super.initState();
     RedditService.getMedia("aww").then((value) {
       setState(() {
-        data = value.data.children
-            .where((element) {
-              var url = element.data.url;
-              return url.endsWith('.jpg') || url.endsWith('.gif');
-            })
-            .map((e) => e.data)
+        media = value.data.children
+            .map(toMedia)
+            .where((element) => element != null)
             .toList();
       });
     });
+  }
+
+  Media toMedia(Child child) {
+    var data = child.data;
+    if (data.postHint == PostHint.IMAGE) {
+      return Media(
+        type: MediaType.Image,
+        thumbnailUrl: data.thumbnail,
+        mediaUrl: data.url,
+      );
+    }
+    if (data.postHint == PostHint.HOSTED_VIDEO) {
+      return Media(
+        type: MediaType.Video,
+        thumbnailUrl: data.thumbnail,
+        mediaUrl: data.media.redditVideo.dashUrl,
+      );
+    }
+    if (data.postHint == PostHint.LINK && data.domain == Domain.IMGUR_COM) {
+      var videoUrl = data.url.replaceAll(RegExp('gifv'), 'mp4');
+      return Media(
+        type: MediaType.Video,
+        thumbnailUrl: data.thumbnail,
+        mediaUrl: videoUrl,
+      );
+    }
+    return null;
   }
 
   @override
@@ -43,16 +72,40 @@ class _HomeScreenState extends State<HomeScreen> {
           child: CarouselSlider.builder(
               viewportFraction: 1.0,
               height: double.infinity,
-              itemCount: data.length,
+              itemCount: media.length,
               itemBuilder: (context, index) {
-                var d = data[index];
-                return ImageCarouselItem(
-                  thumbnailUrl: d.thumbnail,
-                  imageUrl: d.url,
-                );
+                var m = media[index];
+                switch (m.type) {
+                  case MediaType.Image:
+                    return ImageCarouselItem(
+                      thumbnailUrl: m.thumbnailUrl,
+                      imageUrl: m.mediaUrl,
+                    );
+                  case MediaType.Video:
+                    return VideoCarouselItem(
+                      thumbnailUrl: m.thumbnailUrl,
+                      videoUrl: m.mediaUrl,
+                    );
+                  default:
+                    return Placeholder();
+                }
               }),
         ),
       ),
     );
   }
 }
+
+class Media {
+  final MediaType type;
+  final String thumbnailUrl;
+  final String mediaUrl;
+
+  Media({
+    @required this.type,
+    @required this.thumbnailUrl,
+    @required this.mediaUrl,
+  });
+}
+
+enum MediaType { Video, Image }
