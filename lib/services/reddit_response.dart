@@ -112,7 +112,8 @@ class ChildData {
         postHint: postHintValues.map[json["post_hint"]],
         domain: domainValues.map[json["domain"]],
         over18: json["over_18"],
-        preview: Preview.fromJson(json["preview"]),
+        preview:
+            json["preview"] == null ? null : Preview.fromJson(json["preview"]),
         mediaOnly: json["media_only"],
         canGild: json["can_gild"],
         id: json["id"],

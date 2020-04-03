@@ -4,6 +4,7 @@ import 'package:flausch/services/reddit_response.dart';
 import 'package:flausch/ui/image_carousel_item.dart';
 import 'package:flausch/ui/video_carousel_item.dart';
 import 'package:flutter/material.dart';
+import 'package:html_character_entities/html_character_entities.dart';
 
 const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'gif', 'png'];
 const SUPPORTED_VIDEO_EXTENSIONS = ['jpg', 'gif', 'png'];
@@ -24,6 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    loadImages();
+  }
+
+  void loadImages() {
     RedditService.getMedia("aww").then((value) {
       setState(() {
         media = value.data.children
@@ -37,9 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Media toMedia(Child child) {
     var data = child.data;
     if (data.postHint == PostHint.IMAGE) {
+      var mainImage = data.preview.images[0];
+      var resolutions = List.of(mainImage.resolutions);
+      resolutions.sort((a, b) => a.height.compareTo(b.height));
       return Media(
         type: MediaType.Image,
-        thumbnailUrl: data.thumbnail,
+        thumbnailUrl: HtmlCharacterEntities.decode(resolutions[0].url),
         mediaUrl: data.url,
       );
     }
@@ -64,6 +72,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.refresh),
+        onPressed: () => loadImages(),
+      ),
       body: Container(
         child:
             media.isEmpty ? buildCircularProgressIndicator() : buildCarousel(),
