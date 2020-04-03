@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -11,41 +11,42 @@ class ImageCarouselItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.center,
-      fit: StackFit.expand,
-      children: <Widget>[
-        Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            Image.network(
-              thumbnailUrl,
-              fit: BoxFit.cover,
-            ),
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-              child: Container(
-                color: Colors.black.withOpacity(0),
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(thumbnailUrl),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            fit: StackFit.expand,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Image.network(
+                  thumbnailUrl,
+                  fit: BoxFit.contain,
+                ),
               ),
-            )
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Image.network(
-            thumbnailUrl,
-            fit: BoxFit.contain,
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: FadeInImage.memoryNetwork(
+                  fadeInDuration: Duration(milliseconds: 100),
+                  placeholder: kTransparentImage,
+                  image: imageUrl,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
           ),
         ),
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: FadeInImage.memoryNetwork(
-            placeholder: kTransparentImage,
-            image: imageUrl,
-            fit: BoxFit.contain,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
