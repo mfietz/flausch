@@ -114,6 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: media.length,
         controller: swipeController,
         autoplay: false,
+        autoplayDelay: 10000,
         onIndexChanged: (value) {
           setState(() {
             activeIndex = value;
