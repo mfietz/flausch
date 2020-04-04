@@ -20,30 +20,35 @@ class ImageCarouselItem extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-          child: Stack(
-            alignment: AlignmentDirectional.center,
-            fit: StackFit.expand,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Image.network(
-                  thumbnailUrl,
-                  fit: BoxFit.contain,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 75.0,
+        ),
+        child: ClipRRect(
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+            child: Stack(
+              alignment: AlignmentDirectional.center,
+              fit: StackFit.expand,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Image.network(
+                    thumbnailUrl,
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: FadeInImage.memoryNetwork(
-                  fadeInDuration: Duration(milliseconds: 100),
-                  placeholder: kTransparentImage,
-                  image: imageUrl,
-                  fit: BoxFit.contain,
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: FadeInImage.memoryNetwork(
+                    fadeInDuration: Duration(milliseconds: 100),
+                    placeholder: kTransparentImage,
+                    image: imageUrl,
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
