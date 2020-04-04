@@ -1,9 +1,12 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:math';
+
+import 'package:animated_floatactionbuttons/animated_floatactionbuttons.dart';
 import 'package:flausch/services/reddit.dart';
 import 'package:flausch/services/reddit_response.dart';
 import 'package:flausch/ui/image_carousel_item.dart';
 import 'package:flausch/ui/video_carousel_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:html_character_entities/html_character_entities.dart';
 
 const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'gif', 'png'];
@@ -20,7 +23,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static const PREVIEW_SIZE = 50.0;
+
+  final SwiperController swipeController = SwiperController();
+  final ScrollController scrollController = ScrollController();
+
   List<Media> media = [];
+  int activeIndex = 0;
 
   @override
   void initState() {
@@ -72,13 +81,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.refresh),
-        onPressed: () => loadImages(),
+      floatingActionButton: AnimatedFloatingActionButton(
+        //Fab list
+        fabButtons: <Widget>[
+          autoPlayButton(),
+          refreshButton(),
+        ],
+        animatedIconData: AnimatedIcons.menu_close,
       ),
       body: Container(
-        child:
-            media.isEmpty ? buildCircularProgressIndicator() : buildCarousel(),
+        child: media.isEmpty
+            ? buildCircularProgressIndicator()
+            : buildCarousel(context),
       ),
     );
   }
@@ -92,11 +106,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget buildCarousel() {
-    return CarouselSlider.builder(
+  Widget buildCarousel(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var offset = (activeIndex + 1.5) * PREVIEW_SIZE - screenWidth / 2;
+    return Swiper(
         viewportFraction: 1.0,
-        height: double.infinity,
         itemCount: media.length,
+        controller: swipeController,
+        autoplay: false,
+        onIndexChanged: (value) {
+          setState(() {
+            activeIndex = value;
+          });
+          scrollController.animateTo(
+            max(0, offset),
+            duration: Duration(milliseconds: 300),
+            curve: Curves.ease,
+          );
+        },
         itemBuilder: (context, index) {
           var m = media[index];
           switch (m.type) {
@@ -113,7 +140,78 @@ class _HomeScreenState extends State<HomeScreen> {
             default:
               return Placeholder();
           }
+        },
+        pagination: SwiperCustomPagination(
+            builder: (BuildContext context, SwiperPluginConfig config) {
+          return buildPreviewBar();
+        }));
+  }
+
+  Widget buildPreviewBar() {
+    return SafeArea(
+      child: Container(
+        height: PREVIEW_SIZE,
+        child: buildThumbnailBarList(),
+      ),
+    );
+  }
+
+  Widget buildThumbnailBarList() {
+    return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        controller: scrollController,
+        itemCount: media.length,
+        itemBuilder: (context, index) {
+          var image = Image.network(
+            media[index].thumbnailUrl,
+            fit: BoxFit.cover,
+          );
+          if (activeIndex != index) {
+            return Container(
+              width: PREVIEW_SIZE,
+              child: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.5),
+                  BlendMode.dstIn,
+                ),
+                child: image,
+              ),
+            );
+          } else {
+            return Container(
+              width: PREVIEW_SIZE,
+              child: image,
+            );
+          }
         });
+  }
+
+  Widget autoPlayButton() {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            if (swipeController.autoplay != null && swipeController.autoplay) {
+              swipeController.stopAutoplay();
+            } else {
+              swipeController.startAutoplay();
+            }
+          });
+        },
+        child: Icon(swipeController.autoplay != null && swipeController.autoplay
+            ? Icons.pause
+            : Icons.play_arrow),
+      ),
+    );
+  }
+
+  Widget refreshButton() {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: () => loadImages(),
+        child: Icon(Icons.refresh),
+      ),
+    );
   }
 }
 
