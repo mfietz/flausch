@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flausch/services/reddit_response.dart';
+import 'package:flausch/data/reddit_response_models.dart';
 import 'package:http/http.dart' as http;
 
 class RedditService {

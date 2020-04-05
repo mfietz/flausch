@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:animated_floatactionbuttons/animated_floatactionbuttons.dart';
-import 'package:flausch/services/reddit.dart';
-import 'package:flausch/services/reddit_response.dart';
+import 'package:flausch/data/reddit_response_models.dart';
+import 'package:flausch/data/reddit_service.dart';
 import 'package:flausch/ui/image_carousel_item.dart';
 import 'package:flausch/ui/video_carousel_item.dart';
 import 'package:flutter/material.dart';
