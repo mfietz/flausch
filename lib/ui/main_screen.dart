@@ -50,19 +50,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Media toMedia(Child child) {
     var data = child.data;
     if (data.postHint == PostHint.IMAGE) {
-      var mainImage = data.preview.images[0];
-      var resolutions = List.of(mainImage.resolutions);
-      resolutions.sort((a, b) => a.height.compareTo(b.height));
+      ResizedIcon image = smallestPreviewImage(data);
       return Media(
         type: MediaType.Image,
-        thumbnailUrl: HtmlCharacterEntities.decode(resolutions[0].url),
+        thumbnailUrl: HtmlCharacterEntities.decode(image.url),
         mediaUrl: data.url,
       );
     }
     if (data.postHint == PostHint.HOSTED_VIDEO) {
+      ResizedIcon image = smallestPreviewImage(data);
       return Media(
         type: MediaType.Video,
-        thumbnailUrl: data.thumbnail,
+        thumbnailUrl: HtmlCharacterEntities.decode(image.url),
         mediaUrl: data.media.redditVideo.dashUrl,
       );
     }
@@ -75,6 +74,13 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
     return null;
+  }
+
+  ResizedIcon smallestPreviewImage(ChildData data) {
+    var mainImage = data.preview.images[0];
+    var resolutions = List.of(mainImage.resolutions);
+    resolutions.sort((a, b) => a.height.compareTo(b.height));
+    return resolutions[0];
   }
 
   @override
