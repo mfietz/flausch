@@ -1,0 +1,2 @@
+const PREVIEW_SIZE = 50.0;
+const DEFAULT_PADDING = 8.0;

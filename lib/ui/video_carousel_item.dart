@@ -1,5 +1,6 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 
+import 'package:flausch/ui/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -32,38 +33,57 @@ class _VideoCarouselItemState extends State<VideoCarouselItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.center,
-      fit: StackFit.expand,
-      children: <Widget>[
-        Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            Image.network(
-              widget.thumbnailUrl,
-              fit: BoxFit.cover,
-            ),
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-              child: Container(
-                color: Colors.black.withOpacity(0),
-              ),
-            )
-          ],
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(widget.thumbnailUrl),
+          fit: BoxFit.cover,
         ),
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: _controller.value.initialized
-              ? Align(
-                  alignment: AlignmentDirectional.center,
-                  child: AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
+      ),
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          child: SafeArea(
+            child: Stack(
+              alignment: AlignmentDirectional.center,
+              fit: StackFit.expand,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    DEFAULT_PADDING,
+                    PREVIEW_SIZE + DEFAULT_PADDING,
+                    DEFAULT_PADDING,
+                    DEFAULT_PADDING,
                   ),
-                )
-              : Container(),
+                  child: Image.network(
+                    widget.thumbnailUrl,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    DEFAULT_PADDING,
+                    PREVIEW_SIZE + DEFAULT_PADDING,
+                    DEFAULT_PADDING,
+                    DEFAULT_PADDING,
+                  ),
+                  child: _controller.value.initialized
+                      ? Align(
+                          alignment: AlignmentDirectional.center,
+                          child: AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: VideoPlayer(_controller),
+                          ),
+                        )
+                      : Container(),
+                ),
+              ],
+            ),
+          ),
         ),
-      ],
+      ),
     );
   }
 
