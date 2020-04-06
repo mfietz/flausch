@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:animated_floatactionbuttons/animated_floatactionbuttons.dart';
 import 'package:flausch/data/reddit_response_models.dart';
 import 'package:flausch/data/reddit_service.dart';
+import 'package:flausch/ui/constants.dart';
 import 'package:flausch/ui/image_carousel_item.dart';
 import 'package:flausch/ui/video_carousel_item.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const PREVIEW_SIZE = 50.0;
-
   final SwiperController swipeController = SwiperController();
   final ScrollController scrollController = ScrollController();
 
