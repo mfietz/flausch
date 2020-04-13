@@ -10,14 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:html_character_entities/html_character_entities.dart';
 
-const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'gif', 'png'];
-const SUPPORTED_VIDEO_EXTENSIONS = ['jpg', 'gif', 'png'];
-const SUPPORTED_EXTENSIONS = SUPPORTED_IMAGE_EXTENSIONS;
-
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key, this.title}) : super(key: key);
-
-  final String title;
+  HomeScreen({Key key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();

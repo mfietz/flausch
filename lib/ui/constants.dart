@@ -1,2 +1,5 @@
 const PREVIEW_SIZE = 50.0;
 const DEFAULT_PADDING = 8.0;
+const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'gif', 'png'];
+const SUPPORTED_VIDEO_EXTENSIONS = ['jpg', 'gif', 'png'];
+const SUPPORTED_EXTENSIONS = SUPPORTED_IMAGE_EXTENSIONS;
