@@ -1,5 +1,5 @@
 name: flausch
-description: A new Flutter application.
+description: It's so fluffy!
 
 version: 1.0.0+1
 
@@ -16,6 +16,7 @@ dependencies:
   transparent_image: ^1.0.0
   html_character_entities: ^0.1.2+4
   animated_floatactionbuttons: ^0.1.0
+  flutter_launcher_icons: ^0.7.4
 
 dev_dependencies:
   flutter_test:
@@ -23,3 +24,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
