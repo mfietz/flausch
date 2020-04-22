@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'Flausch',
       theme: ThemeData(
         primaryColor: Colors.deepOrange,
-        accentColor: Colors.blue,
+        accentColor: Colors.deepOrange,
       ),
       home: HomeScreen(),
     );
