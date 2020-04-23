@@ -107,7 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildCarousel(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
-    var offset = (activeIndex + 1.5) * PREVIEW_SIZE - screenWidth / 2;
     return Swiper(
         viewportFraction: 1.0,
         itemCount: media.length,
@@ -118,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             activeIndex = value;
           });
+          var offset = (activeIndex + 0.5) * PREVIEW_SIZE - screenWidth / 2;
           scrollController.animateTo(
             max(0, offset),
             duration: Duration(milliseconds: 300),
