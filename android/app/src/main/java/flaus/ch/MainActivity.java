@@ -1,4 +1,4 @@
-package flausch.flausch;
+package flaus.ch;
 
 import io.flutter.embedding.android.FlutterActivity;
 
