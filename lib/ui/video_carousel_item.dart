@@ -25,7 +25,6 @@ class _VideoCarouselItemState extends State<VideoCarouselItem> {
       ..initialize().then((_) {
         setState(() {});
         _controller.play();
-        print(_controller.value.aspectRatio);
       });
   }
 
