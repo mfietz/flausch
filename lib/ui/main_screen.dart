@@ -33,10 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void loadImages() {
     RedditService.getMedia("aww").then((value) {
       setState(() {
-        media = value.data.children
-            .map(toMedia)
-            .where((element) => element != null)
-            .toList();
+        media = value.data.children.map(toMedia).where((element) => element != null).toList();
       });
     });
   }
@@ -56,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return Media(
         type: MediaType.Video,
         thumbnailUrl: HtmlCharacterEntities.decode(image.url),
-        mediaUrl: data.media.redditVideo.dashUrl,
+        mediaUrl: data.media.redditVideo.fallbackUrl,
       );
     }
     if (data.postHint == PostHint.LINK && data.domain == Domain.IMGUR_COM) {
@@ -89,9 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
         animatedIconData: AnimatedIcons.menu_close,
       ),
       body: Container(
-        child: media.isEmpty
-            ? buildCircularProgressIndicator()
-            : buildCarousel(context),
+        child: media.isEmpty ? buildCircularProgressIndicator() : buildCarousel(context),
       ),
     );
   }
@@ -141,8 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return Placeholder();
           }
         },
-        pagination: SwiperCustomPagination(
-            builder: (BuildContext context, SwiperPluginConfig config) {
+        pagination: SwiperCustomPagination(builder: (BuildContext context, SwiperPluginConfig config) {
           return buildPreviewBar();
         }));
   }
@@ -198,9 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           });
         },
-        child: Icon(swipeController.autoplay != null && swipeController.autoplay
-            ? Icons.pause
-            : Icons.play_arrow),
+        child: Icon(swipeController.autoplay != null && swipeController.autoplay ? Icons.pause : Icons.play_arrow),
       ),
     );
   }

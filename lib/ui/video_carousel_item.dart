@@ -24,6 +24,7 @@ class _VideoCarouselItemState extends State<VideoCarouselItem> {
     _controller = VideoPlayerController.network(widget.videoUrl)
       ..initialize().then((_) {
         setState(() {});
+        _controller.setVolume(0.0);
         _controller.play();
       });
   }
