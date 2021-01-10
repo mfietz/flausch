@@ -7,6 +7,7 @@ import 'package:flausch/ui/constants.dart';
 import 'package:flausch/ui/image_carousel_item.dart';
 import 'package:flausch/ui/video_carousel_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:html_character_entities/html_character_entities.dart';
 
@@ -20,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final SwiperController swipeController = SwiperController();
   final ScrollController scrollController = ScrollController();
+  final FocusNode focusNode = FocusNode();
 
   List<Media> media = [];
   int activeIndex = 0;
@@ -100,45 +102,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+
   Widget buildCarousel(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
-    return Swiper(
-        viewportFraction: 1.0,
-        itemCount: media.length,
-        controller: swipeController,
-        autoplay: false,
-        autoplayDelay: 10000,
-        onIndexChanged: (value) {
-          setState(() {
-            activeIndex = value;
-          });
-          var offset = (activeIndex + 0.5) * PREVIEW_SIZE - screenWidth / 2;
-          scrollController.animateTo(
-            max(0, offset),
-            duration: Duration(milliseconds: 300),
-            curve: Curves.ease,
-          );
-        },
-        itemBuilder: (context, index) {
-          var m = media[index];
-          switch (m.type) {
-            case MediaType.Image:
-              return ImageCarouselItem(
-                thumbnailUrl: m.thumbnailUrl,
-                imageUrl: m.mediaUrl,
-              );
-            case MediaType.Video:
-              return VideoCarouselItem(
-                thumbnailUrl: m.thumbnailUrl,
-                videoUrl: m.mediaUrl,
-              );
-            default:
-              return Placeholder();
-          }
-        },
-        pagination: SwiperCustomPagination(builder: (BuildContext context, SwiperPluginConfig config) {
-          return buildPreviewBar();
-        }));
+    return RawKeyboardListener(
+      autofocus: true,
+      focusNode: focusNode,
+      onKey: _handleKeyEvent,
+      child: Swiper(
+          viewportFraction: 1.0,
+          itemCount: media.length,
+          controller: swipeController,
+          autoplay: false,
+          autoplayDelay: 10000,
+          onIndexChanged: (value) {
+            setState(() {
+              activeIndex = value;
+            });
+            var offset = (activeIndex + 0.5) * PREVIEW_SIZE - screenWidth / 2;
+            scrollController.animateTo(
+              max(0, offset),
+              duration: Duration(milliseconds: 300),
+              curve: Curves.ease,
+            );
+          },
+          itemBuilder: (context, index) {
+            var m = media[index];
+            switch (m.type) {
+              case MediaType.Image:
+                return ImageCarouselItem(
+                  thumbnailUrl: m.thumbnailUrl,
+                  imageUrl: m.mediaUrl,
+                );
+              case MediaType.Video:
+                return VideoCarouselItem(
+                  thumbnailUrl: m.thumbnailUrl,
+                  videoUrl: m.mediaUrl,
+                );
+              default:
+                return Placeholder();
+            }
+          },
+          pagination: SwiperCustomPagination(builder: (BuildContext context, SwiperPluginConfig config) {
+            return buildPreviewBar();
+          })),
+    );
   }
 
   Widget buildPreviewBar() {
@@ -160,23 +173,10 @@ class _HomeScreenState extends State<HomeScreen> {
             media[index].thumbnailUrl,
             fit: BoxFit.cover,
           );
-          if (activeIndex != index) {
-            return Container(
-              width: PREVIEW_SIZE,
-              child: ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.5),
-                  BlendMode.dstIn,
-                ),
-                child: image,
-              ),
-            );
-          } else {
-            return Container(
-              width: PREVIEW_SIZE,
-              child: image,
-            );
-          }
+          return Opacity(
+            opacity: activeIndex == index ? 1.0 : 0.5,
+            child: image,
+          );
         });
   }
 
@@ -204,6 +204,14 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Icon(Icons.refresh),
       ),
     );
+  }
+
+  void _handleKeyEvent(RawKeyEvent event) {
+    if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+      swipeController.next();
+    } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+      swipeController.previous();
+    }
   }
 }
 
