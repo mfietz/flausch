@@ -6,7 +6,7 @@ class ImageCarouselItem extends StatelessWidget {
   final String thumbnailUrl;
   final String imageUrl;
 
-  ImageCarouselItem({this.thumbnailUrl, this.imageUrl});
+  ImageCarouselItem({required this.thumbnailUrl, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

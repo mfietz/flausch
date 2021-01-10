@@ -12,7 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.12.2
   flutter_swiper: ^1.1.6
-  video_player: ^1.0.1
+  video_player: ^2.0.0-nullsafety.4
   transparent_image: ^1.0.0
   html_character_entities: ^0.1.2+4
   animated_floatactionbuttons: ^0.1.0

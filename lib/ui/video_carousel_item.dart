@@ -7,8 +7,8 @@ class VideoCarouselItem extends StatefulWidget {
   final String videoUrl;
 
   VideoCarouselItem({
-    this.thumbnailUrl,
-    this.videoUrl,
+    required this.thumbnailUrl,
+    required this.videoUrl,
   });
 
   @override
@@ -16,7 +16,7 @@ class VideoCarouselItem extends StatefulWidget {
 }
 
 class _VideoCarouselItemState extends State<VideoCarouselItem> {
-  VideoPlayerController _controller;
+  late VideoPlayerController _controller;
 
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _VideoCarouselItemState extends State<VideoCarouselItem> {
   Widget build(BuildContext context) {
     return CarouselItem(
       thumbnailUrl: widget.thumbnailUrl,
-      child: _controller.value.initialized
+      child: _controller.value.isInitialized
           ? Align(
               alignment: AlignmentDirectional.center,
               child: AspectRatio(

@@ -12,8 +12,6 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:html_character_entities/html_character_entities.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -35,28 +33,35 @@ class _HomeScreenState extends State<HomeScreen> {
   void loadImages() {
     RedditService.getMedia("aww").then((value) {
       setState(() {
-        media = value.data.children.map(toMedia).where((element) => element != null).toList();
+        media = [
+          for (var child in value.data.children)
+            if (toMedia(child) != null) toMedia(child)!
+        ];
       });
     });
   }
 
-  Media toMedia(Child child) {
+  Media? toMedia(Child child) {
     var data = child.data;
     if (data.postHint == PostHint.IMAGE) {
-      ResizedIcon image = smallestPreviewImage(data);
-      return Media(
-        type: MediaType.Image,
-        thumbnailUrl: HtmlCharacterEntities.decode(image.url),
-        mediaUrl: data.url,
-      );
+      var image = smallestPreviewImage(data);
+      if (image != null) {
+        return Media(
+          type: MediaType.Image,
+          thumbnailUrl: HtmlCharacterEntities.decode(image.url),
+          mediaUrl: data.url,
+        );
+      }
     }
-    if (data.postHint == PostHint.HOSTED_VIDEO) {
-      ResizedIcon image = smallestPreviewImage(data);
-      return Media(
-        type: MediaType.Video,
-        thumbnailUrl: HtmlCharacterEntities.decode(image.url),
-        mediaUrl: data.media.redditVideo.fallbackUrl,
-      );
+    if (data.postHint == PostHint.HOSTED_VIDEO && data.media != null && data.media!.redditVideo != null) {
+      var image = smallestPreviewImage(data);
+      if (image != null) {
+        return Media(
+          type: MediaType.Video,
+          thumbnailUrl: HtmlCharacterEntities.decode(image.url),
+          mediaUrl: data.media!.redditVideo!.fallbackUrl,
+        );
+      }
     }
     if (data.postHint == PostHint.LINK && data.domain == Domain.IMGUR_COM) {
       var videoUrl = data.url.replaceAll(RegExp('gifv'), 'mp4');
@@ -69,8 +74,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return null;
   }
 
-  ResizedIcon smallestPreviewImage(ChildData data) {
-    var mainImage = data.preview.images[0];
+  ResizedIcon? smallestPreviewImage(ChildData data) {
+    if (data.preview == null) {
+      return null;
+    }
+    var mainImage = data.preview!.images[0];
     var resolutions = List.of(mainImage.resolutions);
     resolutions.sort((a, b) => a.height.compareTo(b.height));
     return resolutions[0];
@@ -221,9 +229,9 @@ class Media {
   final String mediaUrl;
 
   Media({
-    @required this.type,
-    @required this.thumbnailUrl,
-    @required this.mediaUrl,
+    required this.type,
+    required this.thumbnailUrl,
+    required this.mediaUrl,
   });
 }
 

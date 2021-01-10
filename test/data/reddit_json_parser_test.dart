@@ -1,14 +1,9 @@
 import 'package:flausch/data/reddit_json_parser.dart';
-import 'package:flausch/data/reddit_response_models.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Root root;
-
   group('Parser', () {
-    setUp(() async {
-      root = RedditJsonParser.parse(json);
-    });
+    var root = RedditJsonParser.parse(json);
     test('root is parsed', () {
       expect(root, isNotNull);
     });

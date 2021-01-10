@@ -2,7 +2,7 @@ class Root {
   Data data;
 
   Root({
-    this.data,
+    required this.data,
   });
 
   factory Root.fromJson(Map<String, dynamic> json) => Root(
@@ -11,14 +11,14 @@ class Root {
 }
 
 class Data {
-  int dist;
+  int? dist;
   List<Child> children;
-  String after;
-  String before;
+  String? after;
+  String? before;
 
   Data({
     this.dist,
-    this.children,
+    required this.children,
     this.after,
     this.before,
   });
@@ -35,7 +35,7 @@ class Child {
   ChildData data;
 
   Child({
-    this.data,
+    required this.data,
   });
 
   factory Child.fromJson(Map<String, dynamic> json) => Child(
@@ -50,34 +50,34 @@ class ChildData {
   String name;
   int score;
   String thumbnail;
-  PostHint postHint;
-  Domain domain;
-  Preview preview;
+  PostHint? postHint;
+  Domain? domain;
+  Preview? preview;
   String id;
   String author;
   String permalink;
   String url;
   double createdUtc;
-  Media media;
+  Media? media;
   bool isVideo;
 
   ChildData({
-    this.title,
-    this.thumbnailHeight,
-    this.name,
-    this.thumbnailWidth,
-    this.score,
-    this.thumbnail,
+    required this.title,
+    required this.thumbnailHeight,
+    required this.name,
+    required this.thumbnailWidth,
+    required this.score,
+    required this.thumbnail,
     this.postHint,
     this.domain,
     this.preview,
-    this.id,
-    this.author,
-    this.permalink,
-    this.url,
-    this.createdUtc,
+    required this.id,
+    required this.author,
+    required this.permalink,
+    required this.url,
+    required this.createdUtc,
     this.media,
-    this.isVideo,
+    required this.isVideo,
   });
 
   factory ChildData.fromJson(Map<String, dynamic> json) => ChildData(
@@ -106,9 +106,9 @@ class ResizedIcon {
   int height;
 
   ResizedIcon({
-    this.url,
-    this.width,
-    this.height,
+    required this.url,
+    required this.width,
+    required this.height,
   });
 
   factory ResizedIcon.fromJson(Map<String, dynamic> json) => ResizedIcon(
@@ -128,8 +128,8 @@ final domainValues = EnumValues({
 });
 
 class Media {
-  RedditVideo redditVideo;
-  Domain type;
+  RedditVideo? redditVideo;
+  Domain? type;
 
   Media({
     this.redditVideo,
@@ -151,12 +151,12 @@ class RedditVideo {
   String fallbackUrl;
 
   RedditVideo({
-    this.height,
-    this.width,
-    this.dashUrl,
-    this.duration,
-    this.isGif,
-    this.fallbackUrl,
+    required this.height,
+    required this.width,
+    required this.dashUrl,
+    required this.duration,
+    required this.isGif,
+    required this.fallbackUrl,
   });
 
   factory RedditVideo.fromJson(Map<String, dynamic> json) => RedditVideo(
@@ -181,11 +181,11 @@ final postHintValues = EnumValues({
 class Preview {
   List<RedditImage> images;
   bool enabled;
-  RedditVideo redditVideoPreview;
+  RedditVideo? redditVideoPreview;
 
   Preview({
-    this.images,
-    this.enabled,
+    required this.images,
+    required this.enabled,
     this.redditVideoPreview,
   });
 
@@ -203,9 +203,9 @@ class RedditImage {
   String id;
 
   RedditImage({
-    this.source,
-    this.resolutions,
-    this.id,
+    required this.source,
+    required this.resolutions,
+    required this.id,
   });
 
   factory RedditImage.fromJson(Map<String, dynamic> json) => RedditImage(
@@ -217,7 +217,7 @@ class RedditImage {
 
 class EnumValues<T> {
   Map<String, T> map;
-  Map<T, String> reverseMap;
+  Map<T, String>? reverseMap;
 
   EnumValues(this.map);
 
@@ -225,6 +225,6 @@ class EnumValues<T> {
     if (reverseMap == null) {
       reverseMap = map.map((k, v) => new MapEntry(v, k));
     }
-    return reverseMap;
+    return reverseMap!;
   }
 }
