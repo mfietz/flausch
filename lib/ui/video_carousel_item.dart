@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoCarouselItem extends StatefulWidget {
+  final String id;
   final String thumbnailUrl;
   final String videoUrl;
 
   VideoCarouselItem({
+    required this.id,
     required this.thumbnailUrl,
     required this.videoUrl,
   });
@@ -32,6 +34,7 @@ class _VideoCarouselItemState extends State<VideoCarouselItem> {
   @override
   Widget build(BuildContext context) {
     return CarouselItem(
+      id: widget.id,
       thumbnailUrl: widget.thumbnailUrl,
       child: _controller.value.isInitialized
           ? Align(

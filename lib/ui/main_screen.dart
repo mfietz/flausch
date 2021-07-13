@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       var image = smallestPreviewImage(data);
       if (image != null) {
         return Media(
+          id: data.id,
           type: MediaType.Image,
           thumbnailUrl: HtmlCharacterEntities.decode(image.url),
           mediaUrl: data.url,
@@ -57,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
       var image = smallestPreviewImage(data);
       if (image != null) {
         return Media(
+          id: data.id,
           type: MediaType.Video,
           thumbnailUrl: HtmlCharacterEntities.decode(image.url),
           mediaUrl: data.media!.redditVideo!.fallbackUrl,
@@ -66,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (data.postHint == PostHint.LINK && data.domain == Domain.IMGUR_COM) {
       var videoUrl = data.url.replaceAll(RegExp('gifv'), 'mp4');
       return Media(
+        id: data.id,
         type: MediaType.Video,
         thumbnailUrl: data.thumbnail,
         mediaUrl: videoUrl,
@@ -123,42 +126,45 @@ class _HomeScreenState extends State<HomeScreen> {
       focusNode: focusNode,
       onKey: _handleKeyEvent,
       child: Swiper(
-          viewportFraction: 1.0,
-          itemCount: media.length,
-          controller: swipeController,
-          autoplay: false,
-          autoplayDelay: 10000,
-          onIndexChanged: (value) {
-            setState(() {
-              activeIndex = value;
-            });
-            var offset = (activeIndex + 0.5) * PREVIEW_SIZE - screenWidth / 2;
-            scrollController.animateTo(
-              max(0, offset),
-              duration: Duration(milliseconds: 300),
-              curve: Curves.ease,
-            );
-          },
-          itemBuilder: (context, index) {
-            var m = media[index];
-            switch (m.type) {
-              case MediaType.Image:
-                return ImageCarouselItem(
-                  thumbnailUrl: m.thumbnailUrl,
-                  imageUrl: m.mediaUrl,
-                );
-              case MediaType.Video:
-                return VideoCarouselItem(
-                  thumbnailUrl: m.thumbnailUrl,
-                  videoUrl: m.mediaUrl,
-                );
-              default:
-                return Placeholder();
-            }
-          },
-          pagination: SwiperCustomPagination(builder: (BuildContext context, SwiperPluginConfig config) {
-            return buildPreviewBar();
-          })),
+        viewportFraction: 1.0,
+        itemCount: media.length,
+        controller: swipeController,
+        autoplay: false,
+        autoplayDelay: 10000,
+        onIndexChanged: (value) {
+          setState(() {
+            activeIndex = value;
+          });
+          var offset = (activeIndex + 0.5) * PREVIEW_SIZE - screenWidth / 2;
+          scrollController.animateTo(
+            max(0, offset),
+            duration: Duration(milliseconds: 300),
+            curve: Curves.ease,
+          );
+        },
+        itemBuilder: (context, index) {
+          var m = media[index];
+          switch (m.type) {
+            case MediaType.Image:
+              return ImageCarouselItem(
+                id: m.id,
+                thumbnailUrl: m.thumbnailUrl,
+                imageUrl: m.mediaUrl,
+              );
+            case MediaType.Video:
+              return VideoCarouselItem(
+                id: m.id,
+                thumbnailUrl: m.thumbnailUrl,
+                videoUrl: m.mediaUrl,
+              );
+            default:
+              return Placeholder();
+          }
+        },
+        pagination: SwiperCustomPagination(
+          builder: (context, config) => buildPreviewBar(),
+        ),
+      ),
     );
   }
 
@@ -224,11 +230,13 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class Media {
+  final String id;
   final MediaType type;
   final String thumbnailUrl;
   final String mediaUrl;
 
   Media({
+    required this.id,
     required this.type,
     required this.thumbnailUrl,
     required this.mediaUrl,

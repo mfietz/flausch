@@ -4,10 +4,12 @@ import 'package:flausch/ui/constants.dart';
 import 'package:flutter/material.dart';
 
 class CarouselItem extends StatelessWidget {
+  final String id;
   final String thumbnailUrl;
   final Widget child;
 
-  CarouselItem({required this.thumbnailUrl, required this.child});
+  CarouselItem(
+      {required this.id, required this.thumbnailUrl, required this.child});
 
   @override
   Widget build(BuildContext context) {

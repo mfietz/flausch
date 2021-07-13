@@ -3,14 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class ImageCarouselItem extends StatelessWidget {
+  final String id;
   final String thumbnailUrl;
   final String imageUrl;
 
-  ImageCarouselItem({required this.thumbnailUrl, required this.imageUrl});
+  ImageCarouselItem({
+    required this.id,
+    required this.thumbnailUrl,
+    required this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
     return CarouselItem(
+      id: id,
       thumbnailUrl: thumbnailUrl,
       child: FadeInImage.memoryNetwork(
         fadeInDuration: Duration(milliseconds: 100),
