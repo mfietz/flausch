@@ -9,7 +9,6 @@ void main() {
     });
     test('root data is parsed', () {
       expect(root.data, isNotNull);
-      expect(root.data.dist, isNotNull);
       expect(root.data.children, isNotEmpty);
       expect(root.data.after, isNotNull);
     });

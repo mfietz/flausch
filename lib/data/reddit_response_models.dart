@@ -11,21 +11,19 @@ class Root {
 }
 
 class Data {
-  int? dist;
   List<Child> children;
   String? after;
   String? before;
 
   Data({
-    this.dist,
     required this.children,
     this.after,
     this.before,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        dist: json["dist"],
-        children: List<Child>.from(json["children"].map((x) => Child.fromJson(x))),
+        children:
+            List<Child>.from(json["children"].map((x) => Child.fromJson(x))),
         after: json["after"],
         before: json["before"],
       );
@@ -89,7 +87,8 @@ class ChildData {
         thumbnail: json["thumbnail"],
         postHint: postHintValues.map[json["post_hint"]],
         domain: domainValues.map[json["domain"]],
-        preview: json["preview"] == null ? null : Preview.fromJson(json["preview"]),
+        preview:
+            json["preview"] == null ? null : Preview.fromJson(json["preview"]),
         id: json["id"],
         author: json["author"],
         permalink: json["permalink"],
@@ -137,7 +136,9 @@ class Media {
   });
 
   factory Media.fromJson(Map<String, dynamic> json) => Media(
-        redditVideo: json["reddit_video"] == null ? null : RedditVideo.fromJson(json["reddit_video"]),
+        redditVideo: json["reddit_video"] == null
+            ? null
+            : RedditVideo.fromJson(json["reddit_video"]),
         type: json["type"] == null ? null : domainValues.map[json["type"]],
       );
 }
@@ -190,10 +191,12 @@ class Preview {
   });
 
   factory Preview.fromJson(Map<String, dynamic> json) => Preview(
-        images: List<RedditImage>.from(json["images"].map((x) => RedditImage.fromJson(x))),
+        images: List<RedditImage>.from(
+            json["images"].map((x) => RedditImage.fromJson(x))),
         enabled: json["enabled"],
-        redditVideoPreview:
-            json["reddit_video_preview"] == null ? null : RedditVideo.fromJson(json["reddit_video_preview"]),
+        redditVideoPreview: json["reddit_video_preview"] == null
+            ? null
+            : RedditVideo.fromJson(json["reddit_video_preview"]),
       );
 }
 
@@ -210,7 +213,8 @@ class RedditImage {
 
   factory RedditImage.fromJson(Map<String, dynamic> json) => RedditImage(
         source: ResizedIcon.fromJson(json["source"]),
-        resolutions: List<ResizedIcon>.from(json["resolutions"].map((x) => ResizedIcon.fromJson(x))),
+        resolutions: List<ResizedIcon>.from(
+            json["resolutions"].map((x) => ResizedIcon.fromJson(x))),
         id: json["id"],
       );
 }

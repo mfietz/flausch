@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:animated_floatactionbuttons/animated_floatactionbuttons.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flausch/data/reddit_response_models.dart';
 import 'package:flausch/data/reddit_service.dart';
 import 'package:flausch/ui/constants.dart';
@@ -8,7 +8,6 @@ import 'package:flausch/ui/image_carousel_item.dart';
 import 'package:flausch/ui/video_carousel_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:html_character_entities/html_character_entities.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -54,7 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       }
     }
-    if (data.postHint == PostHint.HOSTED_VIDEO && data.media != null && data.media!.redditVideo != null) {
+    if (data.postHint == PostHint.HOSTED_VIDEO &&
+        data.media != null &&
+        data.media!.redditVideo != null) {
       var image = smallestPreviewImage(data);
       if (image != null) {
         return Media(
@@ -90,16 +91,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: AnimatedFloatingActionButton(
-        //Fab list
-        fabButtons: <Widget>[
-          autoPlayButton(),
-          refreshButton(),
-        ],
-        animatedIconData: AnimatedIcons.menu_close,
-      ),
       body: Container(
-        child: media.isEmpty ? buildCircularProgressIndicator() : buildCarousel(context),
+        child: media.isEmpty
+            ? buildCircularProgressIndicator()
+            : buildCarousel(context),
       ),
     );
   }
@@ -179,19 +174,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildThumbnailBarList() {
     return ListView.builder(
-        scrollDirection: Axis.horizontal,
-        controller: scrollController,
-        itemCount: media.length,
-        itemBuilder: (context, index) {
-          var image = Image.network(
-            media[index].thumbnailUrl,
-            fit: BoxFit.cover,
-          );
-          return Opacity(
-            opacity: activeIndex == index ? 1.0 : 0.5,
-            child: image,
-          );
-        });
+      scrollDirection: Axis.horizontal,
+      controller: scrollController,
+      itemCount: media.length,
+      itemBuilder: (context, index) {
+        var image = Image.network(
+          media[index].thumbnailUrl,
+          fit: BoxFit.cover,
+        );
+        return Opacity(
+          opacity: activeIndex == index ? 1.0 : 0.5,
+          child: image,
+        );
+      },
+    );
   }
 
   Widget autoPlayButton() {
@@ -199,14 +195,17 @@ class _HomeScreenState extends State<HomeScreen> {
       child: FloatingActionButton(
         onPressed: () {
           setState(() {
-            if (swipeController.autoplay != null && swipeController.autoplay) {
+            if (swipeController.autoplay != null && swipeController.autoplay!) {
               swipeController.stopAutoplay();
             } else {
               swipeController.startAutoplay();
             }
           });
         },
-        child: Icon(swipeController.autoplay != null && swipeController.autoplay ? Icons.pause : Icons.play_arrow),
+        child: Icon(
+            swipeController.autoplay != null && swipeController.autoplay!
+                ? Icons.pause
+                : Icons.play_arrow),
       ),
     );
   }
